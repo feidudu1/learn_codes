@@ -3,11 +3,13 @@ import Select from '../pages/select/index.vue'
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 const routes = [
+  // 首页
   {
     path: '/index',
     name: 'Index',
     component: Index
   },
+  // 选车内容
   {
     path: '/select',
     name: 'Select',

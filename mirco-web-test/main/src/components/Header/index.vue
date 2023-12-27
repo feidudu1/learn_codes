@@ -5,7 +5,7 @@
   <MainNav />
 </template>
 
-<script lang="ts">
+<script lang="js">
 import UserInfo from './userInfo'
 import MainNav from './main-nav'
 export default {

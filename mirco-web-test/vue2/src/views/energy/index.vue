@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import VTabs from '../../components/v-tabs/index.vue'
 import CarList from './components/carList.vue'
 import CarSwapper from './components/carSwapper.vue'

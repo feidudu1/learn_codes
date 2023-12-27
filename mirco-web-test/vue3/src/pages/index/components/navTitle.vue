@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import { navTitleList } from '../../../store'
 
 export default {

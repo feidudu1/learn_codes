@@ -12,6 +12,10 @@ if (!window.__MICRO_WEB__) {
   render()
 }
 
+/**
+ * 微前端环境
+ */
+
 export async function bootstrap() {
   console.log('react bootstrap')
 }

@@ -8,6 +8,9 @@ import "./index.scss"
 const Login = () => {
 
   useEffect(() => {
+    if (!main.appInfo) {
+      return
+    }
     // 登录页面隐藏头部底部
     main.appInfo.footerState.changeFooter(false)
 

@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import { crumbsState } from '../../store'
 
 export default {

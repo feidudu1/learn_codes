@@ -42,7 +42,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import { ref, nextTick, watch } from 'vue'
 import { NAV_LIST } from '../../const'
 import { headerState } from '../../store'

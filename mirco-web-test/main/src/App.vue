@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import MicroBody from './view/micro-body.vue';
+import MicroBody from './view/micro-body';
 import MainHeader from './components/Header'
 import Footer from './components/Footer'
 import BreadCrumbs from './components/BreadCrumbs'
@@ -40,7 +40,6 @@ export default {
         router.push('/react16#/login')
       }
     })
-
     return {
       showHeader: headerState.showHeader,
       showFooter: footerState.showFooter,

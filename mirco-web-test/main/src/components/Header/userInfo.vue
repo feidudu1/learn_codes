@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import { useRouter } from 'vue-router';
 import { unlogin } from '../../store/login'
 

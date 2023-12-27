@@ -28,7 +28,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import { ref } from 'vue'
 const wordList = []
 

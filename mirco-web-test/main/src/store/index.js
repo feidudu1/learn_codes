@@ -1,20 +1,22 @@
+// 头部数据
+import * as headerState from './header'
+
 // 添加loading状态
-export * as loading from './loading';
+import * as loading from './loading';
 
 // 左侧导航数据
-export * as leftNav from './leftNav'
-
-// 头部数据
-export * as headerState from './header'
+import * as leftNav from './leftNav'
 
 // 底部数据
-export * as footerState from './footer'
+import * as footerState from './footer'
 
 // 面包屑数据
-export * as crumbsState from './bread-crumbs'
+import * as crumbsState from './bread-crumbs'
 
 // 校验登录状态
-export * as loginState from './login'
+import * as loginState from './login'
 
 // 跳转方法
-export * as routerLink from './routerLink'
+import * as routerLink from './routerLink'
+
+export {headerState, loading, leftNav, footerState, crumbsState, loginState, routerLink}

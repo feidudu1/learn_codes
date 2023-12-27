@@ -5,7 +5,7 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
-const cors = require('koa2-cors')
+const cors = require('koa2-cors') // 解决跨域问题
 
 const react15 = require('./routes/react15')
 const react16 = require('./routes/react16')

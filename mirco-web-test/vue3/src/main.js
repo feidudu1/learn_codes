@@ -15,6 +15,11 @@ function render() {
 if (!window.__MICRO_WEB__) {
   render();
 }
+
+/**
+ * 微前端环境
+ */
+
 export async function bootstrap() {
   console.log('vue3.0 app bootstrap');
 }
