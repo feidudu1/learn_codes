@@ -57,3 +57,7 @@ npm start
 Koa框架
 supervisor代替node可以检测到routes文件修改而自动更新服务！
 启动成功后，可以看到 localhost:3000， 如 http://localhost:3000/react15/recommended
+
+
+### 发布平台platform
+需要将html文件拷贝到public文件夹

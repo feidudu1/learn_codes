@@ -31,7 +31,7 @@ export async function bootstrap() {
 
 // 渲染
 export async function mount() {
-  console.log(instance)
+  console.log('vue2 mount', instance)
   render()
 }
 

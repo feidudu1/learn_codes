@@ -82,9 +82,10 @@ export default {
         input.focus()
       })
     }
-
-    const setCurrentIndex = (item) => {
-      router.push(`${item.url}`)
+const currentIndex = ref( 0)
+    const setCurrentIndex = (item, index) => {
+      currentIndex.value = index
+      router.push(item.url)
     }
 
     return {

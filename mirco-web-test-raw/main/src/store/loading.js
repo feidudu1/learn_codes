@@ -11,3 +11,7 @@ export const openLoading = () => {
 export const closeLoading = () => {
   loadingStatus.value = false;
 };
+
+export const changeLoading = (val) => {
+  loadingStatus.value = val
+}
