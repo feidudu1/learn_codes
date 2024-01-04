@@ -12,10 +12,14 @@ export const lifeCycle = async () => {
   if (!nextApp) {
     return
   }
-  if (prevApp && prevApp.destoryed) {
+  if (prevApp && prevApp.unmount) {
+    // 将沙箱代理销毁
+    if (prevApp.proxy) {
+      prevApp.proxy.inactive()
+    }
     await destoryed(prevApp)
   }
-  const app = beforeLoad(nextApp)
+  const app = await beforeLoad(nextApp)
 
   await mounted(app)
 }
@@ -25,19 +29,19 @@ export const beforeLoad = async (app) => {
   app && app.beforeLoad && app.beforeLoad()
 
   // 获取子应用需要显示的内容
-  const subApp = await loadHtml(app) // 获取的是子应用的内容
-  console.log('----------------', `子应用${app.name}加载完成`);
-  subApp && subApp.beforeLoad && subApp.beforeLoad()
+  const subApp = await loadHtml(app) // 获取的是子应用的内容，同时加载了子应用的生命周期
+  console.log('----------------', `子应用${app.name}加载并挂载生命周期完成`);
+  subApp && subApp.bootstrap && subApp.bootstrap()
   return subApp
 }
 
 export const mounted = async (app) => {
-  app && app.mounted && app.mounted()
+  app && app.mount && app.mount(app)
   await runMainLifeCyle('mounted')
 }
 
 export const destoryed = async (app) => {
-  app && app.destoryed && app.destoryed()
+  app && app.unmount && app.unmount(app)
   // 对应的执行下主应用的生命周期
   await runMainLifeCyle('destoryed')
 }

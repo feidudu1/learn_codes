@@ -26,18 +26,19 @@ if (!window.__MICRO_WEB__) {
 // 开始加载结构
 export async function bootstrap() {
   // 加载之前需要做处理的话，可以写在这里
-  console.log('vue app bootstraped');
+  console.log('----', 'vue2 bootstraped');
 }
 
 // 渲染
 export async function mount() {
-  console.log('vue2 mount', instance)
+  console.log('----', 'vue2 mount');
   render()
 }
 
 // 卸载
 // 卸载时需要处理监听事件什么的可以写这里
 export async function unmount(ctx) {
+  instance.unmount()
   instance = null;
   const { container } = ctx
   if (container) {

@@ -18,17 +18,17 @@ if (!window.__MICRO_WEB__) {
  * 微前端环境
  */
 export async function bootstrap() {
-  console.log('react bootstrap')
+  console.log('----', 'react15 bootstrap');
 }
 
 export async function mount(app) {
   setMain(app) // 记录主应用传过来的方法
-  console.log('react mount')
   render()
+  console.log('----', 'react15 mount');
 }
 
 export async function unmount(ctx) {
-  console.log('react unmout')
+  console.log('----', 'react15 unmout');
   // ReactDOM.render 返回的不是对象，所以卸载时只能将容器里的内容清空
   const { container } = ctx
   if (container) {

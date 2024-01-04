@@ -21,16 +21,17 @@ if (!window.__MICRO_WEB__) {
  */
 
 export async function bootstrap() {
-  console.log('vue3.0 app bootstrap');
+  window.a = 1
+  console.log('----','vue3 bootstrap');
 }
 
 export async function mount(app) {
+  console.log('----', 'vue3 mount');
   setMain(app)
   render();
 }
 
 export async function unmount(ctx) {
-  instance.unmount();
   instance = null;
   const { container } = ctx
   if (container) {

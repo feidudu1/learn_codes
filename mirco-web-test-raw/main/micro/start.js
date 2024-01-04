@@ -25,7 +25,6 @@ export const start = () => {
   const app = currentApp()
   if (app) {
     const {pathname, hash} = window.location
-    console.log(1111111, 'start', window.location);
     const url = pathname + hash
     window.__CURRENT_SUB_APP__ = app.activeRule
     window.history.pushState('', '', url) // 主要是为了触发turnApp方法

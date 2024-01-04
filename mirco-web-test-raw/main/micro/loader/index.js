@@ -1,5 +1,5 @@
 import { fetchResource } from "../utils/fetchResource"
-import {performScript} from '../sandbox/performScrpt'
+import { sandBox } from "../sandbox"
 
 // 加载html的方法
 export const loadHtml = async (app) => {
@@ -17,8 +17,9 @@ export const loadHtml = async (app) => {
   }
   ctx.innerHTML = dom
   scripts.forEach(item => {
-    performScript(item)
+    sandBox(app, item)
   })
+  // 这里返回的app已经通过 sandBox 挂载上了生命周期如 mount 等
   return app
 }
 
@@ -31,7 +32,6 @@ const parseHtml = async (entry) => {
   // 去掉html的 DOCTYPE、html、head 标签
   const div = document.createElement('div')
   div.innerHTML = html
-  console.log('load html_div', div);
   const [dom, scriptUrl, script] = await getResources(div, entry) // 这里的 dom 为 div.outerHTML
   const fetchedScripts = await Promise.all(scriptUrl.map(async item => await fetchResource(item)))
   allScript = script.concat(fetchedScripts)
