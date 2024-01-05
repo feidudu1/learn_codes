@@ -11,7 +11,7 @@ export const patchRouter = (globalEvent, eventName) => {
 
 const filterApp = (key, value) => {
   const currentApp = getList().filter(item => item[key] === value)
-  return currentApp && currentApp.length ? currentApp[0] : {}
+  return currentApp && currentApp.length ? currentApp[0] : null
 }
 
 export const findAppByRoute = (router) => {

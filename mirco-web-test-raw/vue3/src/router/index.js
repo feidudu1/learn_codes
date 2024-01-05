@@ -2,6 +2,8 @@ import Index from '../pages/index/index.vue';
 import Select from '../pages/select/index.vue'
 import { createRouter, createWebHashHistory } from 'vue-router';
 
+const baseUrl = '/vue3/'
+
 const routes = [
   // 首页
   {
@@ -18,6 +20,6 @@ const routes = [
 ];
 
 export default createRouter({
-  history: createWebHashHistory('/vue3'),
+  history: createWebHashHistory(baseUrl),
   routes,
 });

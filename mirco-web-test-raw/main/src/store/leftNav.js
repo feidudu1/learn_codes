@@ -1,5 +1,6 @@
 import * as loading from './loading'
 
+// NOTE: 【主子应用通信】把主应用store里的所有状态都传给了微应用-->在生命周期下发到各子应用
 import * as appInfo from '../store'
 
 export const navList = [

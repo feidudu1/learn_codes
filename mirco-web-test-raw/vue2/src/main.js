@@ -38,7 +38,8 @@ export async function mount() {
 // 卸载
 // 卸载时需要处理监听事件什么的可以写这里
 export async function unmount(ctx) {
-  instance.unmount()
+  console.log(instance);
+  // instance.unmount()
   instance = null;
   const { container } = ctx
   if (container) {

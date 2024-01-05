@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+// TODO: warn important minicss 沙箱隔离
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {

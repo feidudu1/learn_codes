@@ -3,6 +3,9 @@ const routes = [
   {
     path: '/',
     component: () => import('../App.vue'),
+    redirect: () => {
+      return {path: '/vue3', hash: '#index'}
+    }
   },
   {
     path: '/react15',

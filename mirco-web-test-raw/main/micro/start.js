@@ -2,6 +2,17 @@ import {setList, getList} from './const/subApps'
 import {rewriteRouter} from './router/rewriteRouter'
 import { currentApp } from './utils'
 import {setMainLifeCycle} from './const/mainLifeCycle'
+import { Custom } from './customevent'
+
+/**
+ * 主子应用间通信&子应用间通信
+ */
+const custom = new Custom()
+custom.on('test', (e, data) => {
+  console.log(77777, data);
+})
+custom.emit('test', '事件bus')
+window.custom = custom
 
 // 拦截路由，引用该文件就会执行
 rewriteRouter()
