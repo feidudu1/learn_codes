@@ -3,6 +3,7 @@ import {rewriteRouter} from './router/rewriteRouter'
 import { currentApp } from './utils'
 import {setMainLifeCycle} from './const/mainLifeCycle'
 import { Custom } from './customevent'
+import {prefetch} from './loader/prefetch'
 
 /**
  * 主子应用间通信&子应用间通信
@@ -40,4 +41,7 @@ export const start = () => {
     window.__CURRENT_SUB_APP__ = app.activeRule
     window.history.pushState('', '', url) // 主要是为了触发turnApp方法
   }
+
+  // 预加载：加载接下来的所有子应用，但是不显示
+  prefetch()
 }

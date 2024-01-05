@@ -9,7 +9,7 @@ export const loadHtml = async (app) => {
    */
   const {container, entry} = app
   // 1、加载和解析子应用内容
-  const [dom, scripts] = await parseHtml(entry)
+  const [dom, scripts] = await parseHtml(entry, app.name)
   // 2、子应用显示
   const ctx = document.querySelector(container)
   if (!ctx) {
@@ -23,7 +23,11 @@ export const loadHtml = async (app) => {
   return app
 }
 
-const parseHtml = async (entry) => {
+const cache = {} // 根据子应用的name来做缓存
+export const parseHtml = async (entry, name) => {
+  if (cache[name]) {
+    return cache[name]
+  } 
   // 这里加载的html是字符串形式，还原成html如文件./demohtml.html所示
   const html = await fetchResource(entry)  
   // 这里的html包含了标签、link、script(src,js)等
@@ -35,6 +39,7 @@ const parseHtml = async (entry) => {
   const [dom, scriptUrl, script] = await getResources(div, entry) // 这里的 dom 为 div.outerHTML
   const fetchedScripts = await Promise.all(scriptUrl.map(async item => await fetchResource(item)))
   allScript = script.concat(fetchedScripts)
+  cache[name] = [dom, allScript]
   return [dom, allScript]
 }
 

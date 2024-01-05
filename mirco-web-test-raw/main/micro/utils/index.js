@@ -20,7 +20,8 @@ export const findAppByRoute = (router) => {
 
 export const currentApp = () => {
   const currentUrl = window.location.pathname
-  return filterApp('activeRule', currentUrl)
+  let prefix = currentUrl.match(/(\/\w+)/)
+  return filterApp('activeRule', prefix && prefix[0])
 }
 
 // 子应用是否做了切换
