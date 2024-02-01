@@ -12,6 +12,7 @@ const log = require('@imooc-cli-dev/log');
 const exec = require('@imooc-cli-dev/exec');
 
 const constant = require('./const');
+// NOTE: require可以加载 .js/.json/.node 三种格式的文件，其他文件格式均当成js文件解析
 const pkg = require('../package.json');
 
 const program = new commander.Command();
@@ -34,15 +35,21 @@ function registerCommand() {
     .usage('<command> [options]')
     .version(pkg.version)
     .option('-d, --debug', '是否开启调试模式', false)
-    .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件路径', '');
+    /** 
+     * 如 imooc-cli-dev init --targetPath /xxx  
+     * 这里的/xxx是路径
+    */
+    .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件路径', ''); 
 
+  // NOTE: 注册命令 init; 注册子命令用 addCommand
   program
     .command('init [projectName]')
     .option('-f, --force', '是否强制初始化项目')
     .action(exec);
 
-  // 开启debug模式
+  // 高级定制2:开启debug模式
   program.on('option:debug', function() {
+    // Note: 检查入参
     if (program.debug) {
       process.env.LOG_LEVEL = 'verbose';
     } else {
@@ -69,21 +76,26 @@ function registerCommand() {
 
   if (program.args && program.args.length < 1) {
     program.outputHelp();
-    console.log();
   }
 }
 
 async function prepare() {
+  // Note: 检查npm包版本号
   checkPkgVersion();
+  // Note: 检查root启动(检查当前账户是不是root)
   checkRoot();
   checkUserHome();
+  // // 检查环境变量
   checkEnv();
+  // 检查是否为最新版本
   await checkGlobalUpdate();
 }
 
 async function checkGlobalUpdate() {
+  // 1、获取当前版本号和模块名
   const currentVersion = pkg.version;
   const npmName = pkg.name;
+  // 2、调用npm API，获取所有版本号
   const { getNpmSemverVersion } = require('@imooc-cli-dev/get-npm-info');
   const lastVersion = await getNpmSemverVersion(currentVersion, npmName);
   if (lastVersion && semver.gt(lastVersion, currentVersion)) {
@@ -122,6 +134,10 @@ function checkUserHome() {
 }
 
 function checkRoot() {
+  /** Note:
+   * process.geteuid()的值为0证明是root账户。但是会有坑
+   * imooc-cli-dev 的值为501；sudo imooc-cli-dev 的值为0
+   */
   const rootCheck = require('root-check');
   rootCheck();
 }
@@ -129,3 +145,4 @@ function checkRoot() {
 function checkPkgVersion() {
   log.info('cli', pkg.version);
 }
+

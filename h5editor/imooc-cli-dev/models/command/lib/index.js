@@ -22,6 +22,7 @@ class Command {
     let runner = new Promise((resolve, reject) => {
       let chain = Promise.resolve();
       chain = chain.then(() => this.checkNodeVersion());
+      // 对参数进行初始化操作
       chain = chain.then(() => this.initArgs());
       chain = chain.then(() => this.init());
       chain = chain.then(() => this.exec());
@@ -36,14 +37,24 @@ class Command {
     this._argv = this._argv.slice(0, this._argv.length - 1);
   }
 
+  // Note: 检查node版本号
+  /** log(process)
+   * {version: 'v16.15.1',
+      versions: {
+        node: '16.15.1',
+        v8: '9.4.146.24-node.21',
+        ...
+      }
+   */
   checkNodeVersion() {
     const currentVersion = process.version;
     const lowestVersion = LOWEST_NODE_VERSION;
-    if (!semver.gte(currentVersion, lowestVersion)) {
+    if (!semver.gte(currentVersion, lowestVersion)) { // gte: 大于
       throw new Error(colors.red(`imooc-cli 需要安装 v${lowestVersion} 以上版本的 Node.js`));
     }
   }
 
+  // Note：子类必须定义init，不然就会执行该init
   init() {
     throw new Error('init必须实现！');
   }

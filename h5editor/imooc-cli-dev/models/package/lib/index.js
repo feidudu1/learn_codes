@@ -1,10 +1,12 @@
 'use strict';
 
 const path = require('path');
+// Note: 做文件相关的操作
 const fse = require('fs-extra');
 const pkgDir = require('pkg-dir').sync;
 const pathExists = require('path-exists').sync;
-const npminstall = require('npminstall');
+// Note: let npm install fast and easy
+const npminstall = require('npminstall'); 
 const { isObject } = require('@imooc-cli-dev/utils');
 const formatPath = require('@imooc-cli-dev/format-path');
 const { getDefaultRegistry, getNpmLatestVersion } = require('@imooc-cli-dev/get-npm-info');
@@ -30,14 +32,17 @@ class Package {
   }
 
   async prepare() {
+    // 解决目录不存在的问题：创建目录
     if (this.storeDir && !pathExists(this.storeDir)) {
       fse.mkdirpSync(this.storeDir);
     }
+    // 将latest转换成具体的版本号
     if (this.packageVersion === 'latest') {
       this.packageVersion = await getNpmLatestVersion(this.packageName);
     }
   }
 
+  // Note：使用 get 关键字定义的getter方法
   get cacheFilePath() {
     return path.resolve(this.storeDir, `_${this.cacheFilePathPrefix}@${this.packageVersion}@${this.packageName}`);
   }
@@ -60,8 +65,8 @@ class Package {
   async install() {
     await this.prepare();
     return npminstall({
-      root: this.targetPath,
-      storeDir: this.storeDir,
+      root: this.targetPath, // 模块路径 /Users/yafei/.imooc-cli-dev/dependencies 或者  /xxx
+      storeDir: this.storeDir, // /Users/yafei/.imooc-cli-dev/dependencies/node_modules
       registry: getDefaultRegistry(),
       pkgs: [{
         name: this.packageName,
@@ -88,28 +93,28 @@ class Package {
           version: latestPackageVersion,
         }],
       });
-      this.packageVersion = latestPackageVersion;
-    } else {
-      this.packageVersion = latestPackageVersion;
     }
+    this.packageVersion = latestPackageVersion;
   }
 
   // 获取入口文件的路径
   getRootFilePath() {
     function _getRootFile(targetPath) {
       // 1. 获取package.json所在目录
-      const dir = pkgDir(targetPath);
+      const dir = pkgDir(targetPath); // pkgDir find the root directory of a Node.js project or npm package
       if (dir) {
         // 2. 读取package.json
         const pkgFile = require(path.resolve(dir, 'package.json'));
         // 3. 寻找main/lib
         if (pkgFile && pkgFile.main) {
           // 4. 路径的兼容(macOS/windows)
-          return formatPath(path.resolve(dir, pkgFile.main));
+          const result = formatPath(path.resolve(dir, pkgFile.main))
+          return result;
         }
       }
       return null;
     }
+
     if (this.storeDir) {
       return _getRootFile(this.cacheFilePath);
     } else {
@@ -118,4 +123,5 @@ class Package {
   }
 }
 
+// Note：cjs的导出写法
 module.exports = Package;

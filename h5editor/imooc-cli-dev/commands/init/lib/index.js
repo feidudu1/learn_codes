@@ -27,7 +27,8 @@ class InitCommand extends Command {
   init() {
     this.projectName = this._argv[0] || '';
     this.force = !!this._cmd.force;
-    log.verbose('projectName', this.projectName);
+    // 这里projectName要有值则 imooc-cli-dev init --debug -tp /Users/yafei/learn/learn_codes/h5editor/imooc-cli-dev/commands/init/lib --force demo-project
+    log.verbose('projectName', this.projectName); // demo-project
     log.verbose('force', this.force);
   }
 
@@ -182,6 +183,11 @@ class InitCommand extends Command {
   }
 
   async downloadTemplate() {
+    // 1、通过项目模板API获取项目模版信息
+    // 1.1 通过egg.js搭建一套后端系统
+    // 1.2 通过npm存储项目模版
+    // 1.3 将项目模板信息存储到mongodb数据库中
+    // 1.4 通过egg.js获取mongodb中的数据并且通过API返回
     const { projectTemplate } = this.projectInfo;
     const templateInfo = this.template.find(item => item.npmName === projectTemplate);
     const targetPath = path.resolve(userHome, '.imooc-cli-dev', 'template');
@@ -227,17 +233,18 @@ class InitCommand extends Command {
 
   async prepare() {
     // 0. 判断项目模板是否存在
-    const template = await getProjectTemplate();
-    if (!template || template.length === 0) {
-      throw new Error('项目模板不存在');
-    }
-    this.template = template;
+    // const template = await getProjectTemplate();
+    // if (!template || template.length === 0) {
+    //   throw new Error('项目模板不存在');
+    // }
+    // this.template = template;
     // 1. 判断当前目录是否为空
     const localPath = process.cwd();
+    // 不为空时：
     if (!this.isDirEmpty(localPath)) {
       let ifContinue = false;
+      // 2. 询问是否继续创建
       if (!this.force) {
-        // 询问是否继续创建
         ifContinue = (await inquirer.prompt({
           type: 'confirm',
           name: 'ifContinue',
@@ -248,7 +255,7 @@ class InitCommand extends Command {
           return;
         }
       }
-      // 2. 是否启动强制更新
+      // 2.1 是否启动强制更新
       if (ifContinue || this.force) {
         // 给用户做二次确认
         const { confirmDelete } = await inquirer.prompt({
@@ -268,6 +275,7 @@ class InitCommand extends Command {
 
   async getProjectInfo() {
     function isValidName(v) {
+      // 首字符必须为英文；尾字符必须为英文或数字，不能为符号；符号仅能用_
       return /^[a-zA-Z]+([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(v);
     }
 
@@ -318,6 +326,7 @@ class InitCommand extends Command {
       },
     };
     const projectPrompt = [];
+    // 项目名称不合法时，重新输入名称
     if (!isProjectNameValid) {
       projectPrompt.push(projectNamePrompt);
     }
@@ -327,9 +336,9 @@ class InitCommand extends Command {
         message: `请输入${title}版本号`,
         default: '1.0.0',
         validate: function(v) {
-          const done = this.async();
+          const done = this.async(); // requirer提供的套路
           setTimeout(function() {
-            if (!(!!semver.valid(v))) {
+            if (!(!!semver.valid(v))) { // Note: semver检查版本号格式
               done('请输入合法的版本号');
               return;
             }
@@ -399,8 +408,9 @@ class InitCommand extends Command {
   }
 
   isDirEmpty(localPath) {
+    // 拿到当前目录下的所有文件[]
     let fileList = fs.readdirSync(localPath);
-    // 文件过滤的逻辑
+    // 文件过滤的逻辑：过滤掉缓存的文件
     fileList = fileList.filter(file => (
       !file.startsWith('.') && ['node_modules'].indexOf(file) < 0
     ));
@@ -419,5 +429,5 @@ function init(argv) {
   return new InitCommand(argv);
 }
 
-module.exports = init;
+module.exports = init; // Note: 这个才是主要导出的
 module.exports.InitCommand = InitCommand;

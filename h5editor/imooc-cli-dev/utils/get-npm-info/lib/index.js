@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ *  获取某npm包的所有版本号
+ */
+
 const axios = require('axios');
 const urlJoin = require('url-join');
 const semver = require('semver');
@@ -16,11 +20,12 @@ function getNpmInfo(npmName, registry) {
     }
     return null;
   }).catch(err => {
-    return Promise.reject(err);
+    console.log('包名:', npmInfoUrl);
+    return Promise.reject(new Error(`获取包失败`));;
   });
 }
 
-function getDefaultRegistry(isOriginal = false) {
+function getDefaultRegistry(isOriginal = true) {
   return isOriginal ? 'https://registry.npmjs.org' : 'https://registry.npm.taobao.org';
 }
 
@@ -33,15 +38,15 @@ async function getNpmVersions(npmName, registry) {
   }
 }
 
-function getSemverVersions(baseVersion, versions) {
+function getSemverVersions(currentVersion, versions) {
   return versions
-    .filter(version => semver.satisfies(version, `>${baseVersion}`))
+    .filter(version => semver.satisfies(version, `>${currentVersion}`))
     .sort((a, b) => semver.gt(b, a) ? 1 : -1);
 }
 
-async function getNpmSemverVersion(baseVersion, npmName, registry) {
-  const versions = await getNpmVersions(npmName, registry);
-  const newVersions = getSemverVersions(baseVersion, versions);
+async function getNpmSemverVersion(currentVersion, npmName, registry) {
+  const versions = await getNpmVersions(npmName, registry); // [ '1.0.4' ]
+  const newVersions = getSemverVersions(currentVersion, versions);
   if (newVersions && newVersions.length > 0) {
     return newVersions[0];
   }
@@ -51,7 +56,8 @@ async function getNpmSemverVersion(baseVersion, npmName, registry) {
 async function getNpmLatestVersion(npmName, registry) {
   let versions = await getNpmVersions(npmName, registry);
   if (versions) {
-    return versions.sort((a, b) => semver.gt(b, a))[0];
+    const sortedVersions = versions.sort((a, b) => semver.gt(a, b) ? -1 : 1) // gt：a>b
+    return sortedVersions[0];
   }
   return null;
 }
