@@ -31,3 +31,8 @@ $ npm stop
 
 
 [egg]: https://eggjs.org
+
+## 子项目介绍
+### 脚手架主体 imooc-cli-dev
+### 脚手架后端 imooc-cli-dev-server
+### 脚手架模版 imooc-cli-dev-template
