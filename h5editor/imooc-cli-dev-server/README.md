@@ -36,3 +36,4 @@ $ npm stop
 ### 脚手架主体 imooc-cli-dev
 ### 脚手架后端 imooc-cli-dev-server
 ### 脚手架模版 imooc-cli-dev-template
+imooc-cli-dev-template-vue2 已经有人发布到npm，不用自己存模版
