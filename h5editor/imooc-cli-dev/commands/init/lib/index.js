@@ -62,7 +62,7 @@ class InitCommand extends Command {
         // 标准安装
         await this.installNormalTemplate();
       } else if (this.templateInfo.type === TEMPLATE_TYPE_CUSTOM) {
-        // 自定义安装
+      //   // 自定义安装
         await this.installCustomTemplate();
       } else {
         throw new Error('无法识别项目模板类型！');
@@ -72,6 +72,10 @@ class InitCommand extends Command {
     }
   }
 
+  /**
+   * 避免将命令更改成删除等的风险
+   * 
+   */
   checkCommand(cmd) {
     if (WHITE_COMMAND.includes(cmd)) {
       return cmd;
@@ -106,7 +110,7 @@ class InitCommand extends Command {
       glob('**', {
         cwd: dir,
         ignore: options.ignore || '',
-        nodir: true,
+        nodir: true, // 筛除掉文件夹
       }, function(err, files) {
         if (err) {
           reject(err);
@@ -118,6 +122,7 @@ class InitCommand extends Command {
               if (err) {
                 reject1(err);
               } else {
+                // Note: 需要写入，不然还是<%= %>，这里的result还是字符串
                 fse.writeFileSync(filePath, result);
                 resolve1(result);
               }
@@ -141,7 +146,9 @@ class InitCommand extends Command {
       const templatePath = path.resolve(this.templateNpm.cacheFilePath, 'template');
       const targetPath = process.cwd();
       fse.ensureDirSync(templatePath);
+      // /Users/yafei/.imooc-cli-dev/template/node_modules/_imooc-cli-dev-template-vue2@1.0.2@imooc-cli-dev-template-vue2/template
       fse.ensureDirSync(targetPath);
+      // /Users/yafei/tempt/test
       fse.copySync(templatePath, targetPath);
     } catch (e) {
       throw e;
@@ -149,11 +156,23 @@ class InitCommand extends Command {
       spinner.stop(true);
       log.success('模板安装成功');
     }
+    /** 
+     * this.templateInfo:
+     * {
+        name: 'vue2标准模版',
+        npmName: 'imooc-cli-dev-template-vue2',
+        version: '1.0.2',
+        tag: 'project',
+        type: 'custom',
+        installCommand: 'npm install',
+        startCommand: 'npm run serve'
+      }
+    */
     const templateIgnore = this.templateInfo.ignore || [];
-    const ignore = ['**/node_modules/**', ...templateIgnore];
+    const ignore = ['**/node_modules/**', 'public/**', ...templateIgnore]; // Note: public是因为里面的html有 <%= BASE_URL %> 这样需要webpack赋予的变量
     await this.ejsRender({ ignore });
     const { installCommand, startCommand } = this.templateInfo;
-    // 依赖安装
+    // 依赖安装，execCommand是自己封装的，基于spawn
     await this.execCommand(installCommand, '依赖安装失败！');
     // 启动命令执行
     await this.execCommand(startCommand, '启动执行命令失败！');
@@ -190,6 +209,7 @@ class InitCommand extends Command {
     // 1.4 通过egg.js获取mongodb中的数据并且通过API返回
     const { projectTemplate } = this.projectInfo;
     const templateInfo = this.template.find(item => item.npmName === projectTemplate);
+    // userHome: /Users/yafei
     const targetPath = path.resolve(userHome, '.imooc-cli-dev', 'template');
     const storeDir = path.resolve(userHome, '.imooc-cli-dev', 'template', 'node_modules');
     const { npmName, version } = templateInfo;
@@ -200,10 +220,14 @@ class InitCommand extends Command {
       packageName: npmName,
       packageVersion: version,
     });
+    /** 
+     * 模版不存在时 下载
+    */
     if (!await templateNpm.exists()) {
       const spinner = spinnerStart('正在下载模板...');
       await sleep();
       try {
+        // 在.imooc-cli-dev的template的node_modules安装 模版npm包（如imooc-cli-dev-template-vue2）
         await templateNpm.install();
       } catch (e) {
         throw e;
@@ -214,6 +238,9 @@ class InitCommand extends Command {
           this.templateNpm = templateNpm;
         }
       }
+    /** 
+     * 模版存在时 更新
+    */
     } else {
       const spinner = spinnerStart('正在更新模板...');
       await sleep();
@@ -232,12 +259,20 @@ class InitCommand extends Command {
   }
 
   async prepare() {
-    // 0. 判断项目模板是否存在
-    // const template = await getProjectTemplate();
-    // if (!template || template.length === 0) {
-    //   throw new Error('项目模板不存在');
-    // }
-    // this.template = template;
+    /**
+     * 0. 判断项目模板是否存在
+     * {
+        name: 'vue2标准模版',
+        npmName: 'imooc-cli-dev-template-vue2',
+        version: '^1.0.0',
+        tag: 'project' // 表示项目还是组件
+      }
+     */
+    const template = await getProjectTemplate();
+    if (!template || template.length === 0) {
+      throw new Error('项目模板不存在');
+    }
+    this.template = template;
     // 1. 判断当前目录是否为空
     const localPath = process.cwd();
     // 不为空时：
@@ -393,7 +428,7 @@ class InitCommand extends Command {
         ...component,
       };
     }
-    // 生成classname
+    // 生成classname testProject --> test-project
     if (projectInfo.projectName) {
       projectInfo.name = projectInfo.projectName;
       projectInfo.className = require('kebab-case')(projectInfo.projectName).replace(/^-/, '');
