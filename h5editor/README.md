@@ -12,6 +12,8 @@
 ## 脚手架后端 imooc-cli-dev-server
 ## 脚手架模版 imooc-cli-dev-template
 ### 项目模版
-imooc-cli-dev-template-vue2 已经有人发布到npm，不用自己存模版
+imooc-cli-dev-template-vue2 已经有人发布
+imooc-cli-dev-template/template-vue2  同上，只不过是custom模版，用自己本地发布的
 imooc-cli-dev-template-vue-element-admin 已经有人发布到npm，不用自己存模版
 ### 组件模版
+imooc-cli-dev-template/lego-components

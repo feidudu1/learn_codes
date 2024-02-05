@@ -179,7 +179,7 @@ class InitCommand extends Command {
   }
 
   async installCustomTemplate() {
-    // 查询自定义模板的入口文件
+    // 查询自定义模板的入口文件，按照自定义模版的入口文件进行处理
     if (await this.templateNpm.exists()) {
       const rootFile = this.templateNpm.getRootFilePath();
       if (fs.existsSync(rootFile)) {
@@ -191,6 +191,7 @@ class InitCommand extends Command {
           sourcePath: templatePath,
           targetPath: process.cwd(),
         };
+        //Note：将options传给模版入口文件的install函数
         const code = `require('${rootFile}')(${JSON.stringify(options)})`;
         log.verbose('code', code);
         await execAsync('node', ['-e', code], { stdio: 'inherit', cwd: process.cwd() });
