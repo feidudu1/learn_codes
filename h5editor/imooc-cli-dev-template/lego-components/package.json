@@ -1,6 +1,6 @@
 {
-  "name": "@imooc-cli/lego-components",
-  "version": "1.0.5",
+  "name": "lego-components-template",
+  "version": "1.0.6",
   "description": "lego vue3 components",
   "main": "index.js",
   "dependencies": {},

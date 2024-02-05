@@ -169,7 +169,7 @@ class InitCommand extends Command {
       }
     */
     const templateIgnore = this.templateInfo.ignore || [];
-    const ignore = ['**/node_modules/**', 'public/**', ...templateIgnore]; // Note: public是因为里面的html有 <%= BASE_URL %> 这样需要webpack赋予的变量
+    const ignore = ['**/node_modules/**', ...templateIgnore];
     await this.ejsRender({ ignore });
     const { installCommand, startCommand } = this.templateInfo;
     // 依赖安装，execCommand是自己封装的，基于spawn

@@ -13,7 +13,7 @@
     "Vue"
   ],
   "files": [
-    "examples",
+    "public",
     "src",
     "build",
     "dist",
